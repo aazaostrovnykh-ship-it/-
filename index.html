@@ -670,13 +670,13 @@
 <!-- Баннер -->
 <section class="hero">
   <h1>Православная книга — пища для души</h1>
-  <p>Закон Божий, Жития Святых, Акафисты, Молитвословы и Синодики — с доставкой по всей России</p>
+  <p>Закон Божий, молитвословы, проповеди, акафисты, иконы и другие товары — с доставкой по всей России</p>
 </section>
 
 <!-- Категории на главной -->
 <section class="categories-section">
   <h2>Каталог по разделам</h2>
-  <p class="subtitle">Выберите раздел, чтобы увидеть книги</p>
+  <p class="subtitle">Выберите раздел, чтобы увидеть товары</p>
   <div class="category-grid" id="categoryGrid"></div>
 </section>
 
@@ -750,59 +750,79 @@
 
 <footer>
   <span class="cross">☦</span>
-  © 2025 Православный магазин «Лампада» — демо-версия для продажи книг
+  © 2025 Православный магазин «Лампада»
 </footer>
 
 <script>
 /* ============================================================
-   КАТАЛОГ — 5 категорий
+   КАТАЛОГ — реальные позиции типографии
    ============================================================ */
 const books = [
   // ---------- ЗАКОН БОЖИЙ ----------
-  { id: 1,  title: "Закон Божий",                    author: "прот. Серафим Слободской", price: 890, category: "Закон Божий", emoji: "📖", color: "#8b5e3c", images: [] },
-  { id: 2,  title: "Православный катехизис",         author: "свт. Филарет Московский",  price: 620, category: "Закон Божий", emoji: "✝️", color: "#7c2d12", images: [] },
-  { id: 3,  title: "Основы православной веры",       author: "прот. Александр Мень",     price: 740, category: "Закон Божий", emoji: "🕊️", color: "#0f766e", images: [] },
-  { id: 4,  title: "Детям о Боге. Закон Божий",      author: "С. Куломзина",             price: 580, category: "Закон Божий", emoji: "👼", color: "#0369a1", images: [] },
-  { id: 5,  title: "Символ веры с пояснениями",      author: "свт. Николай Сербский",    price: 490, category: "Закон Божий", emoji: "📜", color: "#78350f", images: [] },
-  { id: 6,  title: "Таинства Православной Церкви",   author: "прот. Владислав Свешников", price: 680, category: "Закон Божий", emoji: "🕯️", color: "#6d28d9", images: [] },
-
-  // ---------- СИНОДИК ----------
-  { id: 7,  title: "Синодик (общая тетрадь)",        author: "Издание Сретенского монастыря", price: 320, category: "Синодик", emoji: "📔", color: "#475569", images: [] },
-  { id: 8,  title: "Синодик о здравии",              author: "Православное издание",           price: 280, category: "Синодик", emoji: "💛", color: "#a16207", images: [] },
-  { id: 9,  title: "Синодик об упокоении",           author: "Православное издание",           price: 280, category: "Синодик", emoji: "🤍", color: "#334155", images: [] },
-  { id: 10, title: "Вечный помянник",                author: "Издание Оптиной пустыни",        price: 550, category: "Синодик", emoji: "📕", color: "#7f1d1d", images: [] },
-  { id: 11, title: "Синодик монастырский",           author: "Издание Валаамского монастыря",  price: 690, category: "Синодик", emoji: "✒️", color: "#1c1917", images: [] },
-
-  // ---------- ЖИТИЯ СВЯТЫХ ----------
-  { id: 12, title: "Жития Святых (полный год)",      author: "свт. Димитрий Ростовский", price: 1490, category: "Жития Святых", emoji: "📚", color: "#78350f", images: [] },
-  { id: 13, title: "Преподобный Серафим Саровский",  author: "Житие в пересказе",        price: 490, category: "Жития Святых", emoji: "🌿", color: "#15803d", images: [] },
-  { id: 14, title: "Святитель Николай Чудотворец",   author: "Житие и чудеса",           price: 520, category: "Жития Святых", emoji: "⚓", color: "#075985", images: [] },
-  { id: 15, title: "Преподобный Сергий Радонежский", author: "Житие в пересказе",        price: 480, category: "Жития Святых", emoji: "🕯️", color: "#7c2d12", images: [] },
-  { id: 16, title: "Святая блаженная Ксения Петербургская", author: "Житие и подвиги",   price: 450, category: "Жития Святых", emoji: "🌹", color: "#be185d", images: [] },
-  { id: 17, title: "Царственные страстотерпцы",      author: "Жития и письма",           price: 720, category: "Жития Святых", emoji: "👑", color: "#991b1b", images: [] },
-
-  // ---------- АКАФИСТЫ ----------
-  { id: 18, title: "Акафист Иисусу Сладчайшему",     author: "Православное издание", price: 190, category: "Акафисты", emoji: "✝️", color: "#7c2d12", images: [] },
-  { id: 19, title: "Акафист Пресвятой Богородице",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "💙", color: "#0c4a6e", images: [] },
-  { id: 20, title: "Акафист святителю Николаю",      author: "Православное издание", price: 210, category: "Акафисты", emoji: "⭐", color: "#1e40af", images: [] },
-  { id: 21, title: "Акафист преподобному Серафиму Саровскому", author: "Православное издание", price: 210, category: "Акафисты", emoji: "🌿", color: "#15803d", images: [] },
-  { id: 22, title: "Акафист святому Пантелеимону",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "🌾", color: "#a16207", images: [] },
-
-  // ---------- МОЛИТВОСЛОВЫ ----------
-  { id: 23, title: "Православный молитвослов",       author: "Издание Сретенского монастыря", price: 590, category: "Молитвословы", emoji: "📖", color: "#1c1917", images: [] },
-  { id: 24, title: "Молитвослов карманный",          author: "Православное издание",          price: 340, category: "Молитвословы", emoji: "📔", color: "#78350f", images: [] },
-  { id: 25, title: "Молитвослов крупным шрифтом",    author: "Православное издание",          price: 620, category: "Молитвословы", emoji: "🔍", color: "#334155", images: [] },
-  { id: 26, title: "Молитвослов для детей",          author: "Православное издание",          price: 480, category: "Молитвословы", emoji: "👶", color: "#0369a1", images: [] },
-  { id: 27, title: "Псалтирь",                       author: "Православное издание",          price: 690, category: "Молитвословы", emoji: "🎵", color: "#7c2d12", images: [] },
+  { id: 1,  title: 'Книга «Закон Божий». Руководство для семьи и школы, в твердом переплете (ф.А4), стр.560', author: '', price: 300, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 2,  title: 'Книга «Новый Завет» в параллельном переводе, в твердом переплете (ф.А4), стр.590', author: '', price: 300, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 3,  title: 'Книга «Православный молитвослов для слабовидящих», белая бумага, в твердом переплете (ф.А4), стр.344', author: '', price: 300, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 4,  title: 'Книга «Евангелие», формат А5, в твердом переплете, стр.205', author: '', price: 200, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 5,  title: 'Книга «Православный молитвослов», ф.А5, в т. переплете, стр.159', author: '', price: 190, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 6,  title: 'Книга «ПРОПОВЕДИ священнослужителей Екатеринбургской епархии, окормляющих войсковые части и подразделения силовых структур», в твердом переплете, ф.А5, стр.587', author: '', price: 300, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 7,  title: 'Книга протоиерея о. Сергия Вогулкина «Будьте как дети», в твердом переплете, белая бумага (ф.А5), стр.175', author: '', price: 190, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 8,  title: 'Книга протоиерея о. Сергия Вогулкина «Долги наши тяжкие», в твердом переплете, белая бумага (ф.А5), стр.142', author: '', price: 190, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 9,  title: 'Книга «Опыт построения исповеди по беседам Архимандрита Иоанна (Крестьянкина)», размер 14,0*20,5 см (ф.А5), стр.138, в мягком переплете', author: '', price: 60, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 10, title: 'Книга «Псалтырь», в твердом переплете, размер 8,3*11,3 см (ф.А7), стр.652', author: '', price: 150, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 11, title: 'Книжечка «Синодик» (О здравии, о упокоении), в твердом переплете, с цв. вставками, размер 15,5*11 см (ф.А6), стр.65', author: '', price: 150, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 12, title: 'Книга А.И. Осипова «Путь разума в поисках истины», в мягком переплете, ф.А5, стр.349', author: '', price: 130, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 13, title: 'Книга А.И. Осипова «Из времени в вечность: посмертная жизнь души», в мягком переплете, ф.А5, стр.183', author: '', price: 110, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 14, title: 'Книжечка «Крещение — рождение в жизнь вечную», на скрепке, ф.А5, стр.128', author: '', price: 70, category: 'Крещение', emoji: '💧', color: '#0369a1', images: [] },
+  { id: 15, title: 'Книжечка «Как правильно подготовиться к таинству Крещения», на белой бумаге, ф.А5, стр.63', author: '', price: 40, category: 'Крещение', emoji: '💧', color: '#0369a1', images: [] },
+  { id: 16, title: 'Книжечка «Путь к Богу», на белой бумаге, ф.А5, стр.59', author: '', price: 70, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 17, title: 'Книжечка «Акафист святому преподобному Гавриилу Самтаврийскому (Ургебадзе). Духовные наставления», на белой бумаге, ф.А5, стр.51', author: '', price: 70, category: 'Акафист', emoji: '🕯️', color: '#a16207', images: [] },
+  { id: 18, title: 'Книжечка «Памятка крещаемому», на белой бумаге, ф.А5, стр.27', author: '', price: 30, category: 'Крещение', emoji: '💧', color: '#0369a1', images: [] },
+  { id: 19, title: 'Книжечка «Акафист Святителю Николаю Чудотворцу», на белой бумаге, ф.А5, стр.23', author: '', price: 30, category: 'Акафист', emoji: '🕯️', color: '#a16207', images: [] },
+  { id: 20, title: 'Книжечка «Молитвослов православного воина», размер 6,8*10,0 см (ф.А7), стр.128', author: '', price: 15, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 21, title: 'Книжечка «Молитвослов», размер 9,5*14,5 см (ф.А6), стр.128', author: '', price: 40, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 22, title: 'Книжечка «В помощь кающемуся», размер 9,5*13,8 см (ф.А6), стр.9', author: '', price: 25, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 23, title: 'Книжечка «Что нужно знать о Таинстве Крещения», размер 9,3*13,7 см (ф.А6), стр.80', author: '', price: 20, category: 'Крещение', emoji: '💧', color: '#0369a1', images: [] },
+  { id: 24, title: 'Книжечка «Канон Андрея Критского», размер 10,0*14,0 см (ф.А6), стр.78', author: '', price: 35, category: 'Акафист', emoji: '🕯️', color: '#a16207', images: [] },
+  { id: 25, title: 'Книжечка «Молитвы о детях и благополучии семьи», размер 10,0*14,0 см (ф.А6), стр.70', author: '', price: 30, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 26, title: 'Книжечка «Житие и акафист святому праведному Симеону Верхотурскому», размер 9,5*14,5 см (ф.А6), стр.64', author: '', price: 30, category: 'Акафист', emoji: '🕯️', color: '#a16207', images: [] },
+  { id: 27, title: 'Книжечка протоиерея о. Сергия Вогулкина «Как правильно болеть», размер 10,0*14,0 см (ф.А6), стр.64, на газетной бумаге', author: '', price: 20, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 28, title: 'Книжечка протоиерея о. Сергия Вогулкина «Нехорошо человеку быть одному», размер 10,5*14,0 см (ф.А6), стр.56, на газетной бумаге', author: '', price: 20, category: 'Проповеди', emoji: '📢', color: '#7c2d12', images: [] },
+  { id: 29, title: 'Книжечка «Как вести себя на кладбище», размер 10,3*14,0 см (ф.А6), стр.48, на газетной бумаге', author: '', price: 15, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  { id: 30, title: 'Книжечка «От Меня это было», размер 9,5*14,1 см (ф.А6), стр.32', author: '', price: 15, category: 'Закон Божий', emoji: '📖', color: '#8b5e3c', images: [] },
+  // ---------- ИКОНКИ ----------
+  { id: 31, title: 'Иконка-складень «Верую во единого Бога Отца» (с ламинацией) на три иконы, размер 20,5*10 см, в развернутом виде', author: '', price: 18, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 32, title: 'Карточка «Молитва на принятие святой воды и просфоры», размер 19*11 см (разные цвета)', author: '', price: 10, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 33, title: 'Иконка-складень с оборотом Псалом 90-й (без ламинации), размер 9*12 см, в разверн. виде', author: '', price: 10, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 34, title: 'Иконка «Иисуса Христа», с молитвой на обороте, с ламинацией, размер 6,5*8 см', author: '', price: 10, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 35, title: 'Иконка «Александра Невского», с молитвой на обороте (без ламинации), размер 6,2*9 см', author: '', price: 5, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 36, title: '«Молитва разрешительная», формат А4', author: '', price: 10, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 37, title: 'Иконка-складень с оборотом «Молитва об исцелении больных», размер 14,7*6 см, в разверн. виде', author: '', price: 10, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  // ---------- ДРУГОЕ ----------
+  { id: 38, title: 'Этикетка на самоклеющейся бумаге «Святая вода», размер 8,0*10,0 см (ф.А7), 1 шт.', author: '', price: 10, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 39, title: 'Свидетельство о венчании, в твердом переплете, размер 15,0*22,0 см (ф.А5)', author: '', price: 150, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 40, title: 'Свидетельство о крещении, в твердом переплете, размер 12,7*16,6 см', author: '', price: 125, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 41, title: 'Свидетельство о крещении, на картоне с цветной печатью с одной стороны, размер 16,0*24,6 см (в развернутом виде)', author: '', price: 25, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 42, title: 'Требы: «О здравии», «О упокоении», на газетной бумаге', author: '', price: 600, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 43, title: 'Портрет митрополита Екатеринбургского и Верхотурского Евгения, цветной (4+0), формат А3 (большой), заламинированный', author: '', price: 150, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 44, title: 'Портрет митрополита Екатеринбургского и Верхотурского Евгения, цветной (4+0), формат А4, заламинированный', author: '', price: 100, category: 'Другое', emoji: '📄', color: '#475569', images: [] },
+  { id: 45, title: '«Обязательство крестного», ф.А4, на картоне, 4+0', author: '', price: 10, category: 'Крещение', emoji: '💧', color: '#0369a1', images: [] },
+  { id: 46, title: '«Молитва Оптинских старцев», ф.А3, на бумаге, 4+0', author: '', price: 15, category: 'Молитвослов', emoji: '🙏', color: '#1c1917', images: [] },
+  { id: 47, title: 'Иконка «Святое Семейство», ф.А5, цветная 4+4, на обороте молитва, заламинированная', author: '', price: 70, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 48, title: 'Иконка «Целителя Пантелеимона», ф.А5, цветная 4+4, на обороте молитва, заламинированная', author: '', price: 70, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 49, title: 'Иконка «Святителя Николая Чудотворца», ф.А5, цветная 4+4, на обороте молитва, заламинированная', author: '', price: 70, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 50, title: 'Иконка «Святому праведному Иосифу Обручнику», ф.А5, цветная 4+4, на обороте молитва, заламинированная', author: '', price: 70, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
+  { id: 51, title: 'Иконка «Святой Иоанн Тобольский», ф.А5, цветная 4+4, на обороте молитва, заламинированная', author: '', price: 70, category: 'Иконки', emoji: '🖼️', color: '#6d28d9', images: [] },
 ];
 
 /* Иконки для карточек категорий */
 const categoryIcons = {
-  "Закон Божий":   "📖",
-  "Синодик":       "📔",
-  "Жития Святых":  "✨",
-  "Акафисты":      "🕯️",
-  "Молитвословы":  "🙏"
+  'Закон Божий':   '📖',
+  'Молитвослов':   '🙏',
+  'Проповеди':     '📢',
+  'Крещение':      '💧',
+  'Акафист':       '🕯️',
+  'Иконки':        '🖼️',
+  'Другое':        '📄'
 };
 
 /* ============================================================
@@ -828,7 +848,7 @@ function renderCategoryCards() {
            onclick="selectCategory('${cat}')">
         <span class="category-icon">${categoryIcons[cat] || '📚'}</span>
         <div class="category-name">${cat}</div>
-        <div class="category-count">${count} ${declOfNum(count, ['книга','книги','книг'])}</div>
+        <div class="category-count">${count} ${declOfNum(count, ['товар','товара','товаров'])}</div>
       </div>
     `;
   }).join('');
@@ -861,15 +881,15 @@ function renderCatalog() {
 
   const title = document.getElementById('catalogTitle');
   if (activeFilter === 'Все') {
-    title.textContent = `Все книги (${books.length})`;
+    title.textContent = `Все товары (${books.length})`;
   } else {
-    title.textContent = `${categoryIcons[activeFilter] || ''} ${activeFilter} — ${list.length} ${declOfNum(list.length, ['книга','книги','книг'])}`;
+    title.textContent = `${categoryIcons[activeFilter] || ''} ${activeFilter} — ${list.length} ${declOfNum(list.length, ['товар','товара','товаров'])}`;
   }
 
   document.getElementById('catalog').innerHTML = list.map(b => {
     const cover = b.images && b.images.length ? b.images[0] : null;
     const hasGallery = b.images && b.images.length > 1;
-    
+
     return `
     <article class="book-card">
       <div class="book-cover" 
@@ -881,7 +901,7 @@ function renderCatalog() {
       <div class="book-info">
         <div class="book-category">${b.category}</div>
         <div class="book-title">${b.title}</div>
-        <div class="book-author">${b.author}</div>
+        ${b.author ? `<div class="book-author">${b.author}</div>` : ''}
         <div class="book-bottom">
           <div class="book-price">${b.price.toLocaleString('ru-RU')} <small>₽</small></div>
           <button class="add-btn" onclick="addToCart(${b.id}, this)">В корзину</button>
@@ -913,7 +933,7 @@ function addToCart(id, btn) {
       btn.classList.remove('added');
     }, 1200);
   }
-  showToast(`«${book.title}» добавлена в корзину`);
+  showToast(`«${book.title}» добавлен в корзину`);
 }
 
 function changeQty(id, delta) {
@@ -941,7 +961,7 @@ function updateCartUI() {
 
   const itemsEl = document.getElementById('cartItems');
   if (cart.length === 0) {
-    itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста 🛒<br>Добавьте книги из каталога</div>';
+    itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста 🛒<br>Добавьте товары из каталога</div>';
   } else {
     itemsEl.innerHTML = cart.map(item => {
       const cover = item.images && item.images.length ? item.images[0] : null;
@@ -1033,9 +1053,9 @@ async function submitOrder(e) {
   const data = Object.fromEntries(new FormData(form));
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-  // Собираем список книг для письма
+  // Собираем список товаров для письма
   const itemsList = cart.map(i => 
-    `• ${i.title} (${i.author}) — ${i.qty} шт. = ${(i.price * i.qty).toLocaleString('ru-RU')} ₽`
+    `• ${i.title} — ${i.qty} шт. = ${(i.price * i.qty).toLocaleString('ru-RU')} ₽`
   ).join('\n');
 
   // Данные для отправки
