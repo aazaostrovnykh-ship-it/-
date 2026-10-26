@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Православный книжный магазин «от Архимандрита»</title>
+<title>Книги от Архимандрита</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -31,7 +31,7 @@
   header {
     background: var(--primary);
     color: #fff;
-    padding: 18px 30px;
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,7 +41,7 @@
     box-shadow: 0 2px 12px rgba(0,0,0,.2);
   }
   .logo {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: 1px;
     display: flex;
@@ -49,22 +49,31 @@
     gap: 10px;
   }
   .logo span { color: var(--accent); }
-  .cart-btn {
-    background: var(--accent);
-    border: none;
+  .header-actions {
+    display: flex;
+    gap: 15px;
+  }
+  .header-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.3);
     color: #fff;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 30px;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     font-family: inherit;
-    font-weight: 600;
     transition: background .2s;
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .cart-btn:hover { background: var(--accent-hover); }
+  .header-btn:hover { background: rgba(255,255,255,.1); }
+  .header-btn.cart-btn {
+    background: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .header-btn.cart-btn:hover { background: var(--accent-hover); }
   .cart-count {
     background: #fff;
     color: var(--accent);
@@ -278,17 +287,11 @@
     font-weight: 600;
   }
   .book-title {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     margin-bottom: 4px;
     color: var(--primary);
     line-height: 1.3;
-  }
-  .book-author {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 14px;
-    font-style: italic;
   }
   .book-bottom {
     display: flex;
@@ -296,13 +299,16 @@
     align-items: center;
     margin-top: auto;
     gap: 8px;
+    padding-top: 14px;
   }
   .book-price {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--primary);
+    display: flex;
+    flex-direction: column;
   }
-  .book-price small { font-size: 13px; color: var(--muted); font-weight: 400; }
+  .book-price small { font-size: 11px; color: var(--muted); font-weight: 400; text-transform: uppercase; font-family: Arial, sans-serif; }
   .add-btn {
     background: var(--accent);
     border: none;
@@ -317,12 +323,9 @@
     white-space: nowrap;
   }
   .add-btn:hover { background: var(--accent-hover); }
-  .add-btn.added {
-    background: #27ae60;
-    cursor: default;
-  }
+  .add-btn.added { background: #27ae60; cursor: default; }
 
-  /* ---------- Корзина ---------- */
+  /* ---------- Корзина и Модалки ---------- */
   .overlay {
     position: fixed;
     inset: 0;
@@ -399,21 +402,17 @@
     flex-shrink: 0;
     overflow: hidden;
   }
-  .cart-item-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .cart-item-cover img { width: 100%; height: 100%; object-fit: cover; }
   .cart-item-info { flex: 1; min-width: 0; }
   .cart-item-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     margin-bottom: 3px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .cart-item-price { font-size: 14px; color: var(--muted); }
+  .cart-item-price { font-size: 13px; color: var(--muted); }
   .qty-controls {
     display: flex;
     align-items: center;
@@ -453,7 +452,7 @@
   .cart-total {
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     margin-bottom: 16px;
   }
@@ -471,12 +470,8 @@
     transition: background .2s;
   }
   .checkout-btn:hover { background: var(--accent-hover); }
-  .checkout-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
+  .checkout-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-  /* ---------- Модалки (Оформление и Галерея) ---------- */
   .modal {
     position: fixed;
     inset: 0;
@@ -539,22 +534,33 @@
     transition: background .2s;
   }
   .submit-btn:hover { background: #0f1626; }
-  .submit-btn:disabled {
-    background: #7f8c8d;
-    cursor: wait;
+  .submit-btn:disabled { background: #7f8c8d; cursor: wait; }
+
+  /* Личный кабинет (История) */
+  .order-history { display: flex; flex-direction: column; gap: 15px; }
+  .order-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    background: #faf8f2;
   }
-  .success-msg {
-    text-align: center;
-    padding: 20px 0;
+  .order-card-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--primary);
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 8px;
   }
-  .success-msg .check {
-    font-size: 60px;
-    margin-bottom: 16px;
-  }
+  .order-card-items { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .order-card-total { font-weight: bold; text-align: right; }
+
+  .success-msg { text-align: center; padding: 20px 0; }
+  .success-msg .check { font-size: 60px; margin-bottom: 16px; }
   .success-msg h2 { color: #27ae60; margin-bottom: 10px; }
   .success-msg p { color: var(--muted); margin-bottom: 20px; }
 
-  /* Галерея */
   .gallery-box {
     background: #fff;
     border-radius: 14px;
@@ -562,91 +568,69 @@
     max-width: 620px;
     width: 100%;
     position: relative;
-    animation: popIn .3s ease;
   }
   .gallery-close {
     position: absolute;
-    top: 10px;
-    right: 12px;
-    background: #fff;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    z-index: 2;
+    top: 10px; right: 12px;
+    background: #fff; border-radius: 50%;
+    width: 36px; height: 36px; z-index: 2;
     box-shadow: 0 2px 8px rgba(0,0,0,.15);
   }
   #galleryMain {
-    width: 100%;
-    max-height: 60vh;
-    object-fit: contain;
-    border-radius: 10px;
-    background: #f5f3ef;
-    display: block;
-    margin-bottom: 14px;
+    width: 100%; max-height: 60vh;
+    object-fit: contain; border-radius: 10px;
+    background: #f5f3ef; display: block; margin-bottom: 14px;
   }
-  .gallery-thumbs {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
+  .gallery-thumbs { display: flex; gap: 10px; overflow-x: auto; }
   .gallery-thumbs img {
-    width: 70px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 8px;
-    cursor: pointer;
+    width: 70px; height: 90px; object-fit: cover;
+    border-radius: 8px; cursor: pointer;
     border: 2px solid transparent;
-    transition: border-color .2s;
-    flex-shrink: 0;
   }
-  .gallery-thumbs img:hover { border-color: var(--accent); }
   .gallery-thumbs img.active { border-color: var(--accent); }
 
-  /* ---------- Toast ---------- */
   .toast {
     position: fixed;
-    bottom: 30px;
-    left: 50%;
+    bottom: 30px; left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: var(--primary);
-    color: #fff;
-    padding: 14px 26px;
-    border-radius: 30px;
-    font-size: 15px;
-    z-index: 400;
-    opacity: 0;
-    transition: all .3s;
+    background: var(--primary); color: #fff;
+    padding: 14px 26px; border-radius: 30px;
+    font-size: 15px; z-index: 400;
+    opacity: 0; transition: all .3s;
     box-shadow: 0 6px 20px rgba(0,0,0,.25);
   }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
   /* ---------- Футер ---------- */
   footer {
     background: var(--primary);
     color: #c5cad3;
     text-align: center;
-    padding: 30px 20px;
+    padding: 40px 20px;
     font-family: Arial, sans-serif;
     font-size: 14px;
+    line-height: 1.8;
   }
-  footer .cross {
-    color: var(--accent);
-    font-size: 22px;
-    display: block;
-    margin-bottom: 8px;
+  footer .cross { color: var(--accent); font-size: 24px; display: block; margin-bottom: 10px; }
+  footer .brand { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+  footer .disclaimer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.1);
+    font-size: 12px;
+    color: #8c939e;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 28px; }
     .hero p { font-size: 16px; }
     .hero { padding: 50px 16px 30px; }
-    header { padding: 14px 18px; }
-    .logo { font-size: 19px; }
-    .cart-btn { padding: 8px 14px; font-size: 14px; }
+    header { padding: 14px 18px; flex-direction: column; gap: 15px; }
+    .header-actions { width: 100%; justify-content: center; }
+    .header-btn { padding: 8px 12px; font-size: 13px; }
     .catalog { padding: 16px; gap: 16px; }
     .categories-section { padding: 30px 16px 10px; }
     .categories-section h2 { font-size: 22px; }
@@ -661,10 +645,15 @@
 
 <!-- Шапка -->
 <header>
-  <div class="logo">🕯️ От<span>Архимандрита</span></div>
-  <button class="cart-btn" onclick="openCart()">
-    🛒 Корзина <span class="cart-count" id="cartCount">0</span>
-  </button>
+  <div class="logo">🕯️ Книги от <span>Архимандрита</span></div>
+  <div class="header-actions">
+    <button class="header-btn" onclick="openOrders()">
+      📋 Мои заказы
+    </button>
+    <button class="header-btn cart-btn" onclick="openCart()">
+      🛒 Корзина <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
 </header>
 
 <!-- Баннер -->
@@ -690,18 +679,18 @@
 <main class="catalog" id="catalog"></main>
 
 <!-- Затемнение -->
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
 
 <!-- Панель корзины -->
 <aside class="cart-panel" id="cartPanel">
   <div class="cart-header">
     <h2>Корзина</h2>
-    <button class="close-btn" onclick="closeCart()">×</button>
+    <button class="close-btn" onclick="closeAllPanels()">×</button>
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
     <div class="cart-total">
-      <span>Итого:</span>
+      <span>Итого пожертвование:</span>
       <span id="cartTotal">0 ₽</span>
     </div>
     <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()">
@@ -714,6 +703,9 @@
 <div class="modal" id="checkoutModal">
   <div class="modal-box" id="modalContent">
     <h2>Оформление заказа</h2>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">
+      Оставьте свои данные, и мы свяжемся с вами для согласования размера добровольного пожертвования и доставки.
+    </p>
     <form id="checkoutForm" onsubmit="submitOrder(event)">
       <div class="form-group">
         <label>Ваше имя *</label>
@@ -731,8 +723,19 @@
         <label>Адрес доставки *</label>
         <textarea name="address" rows="2" required placeholder="Город, улица, дом, квартира"></textarea>
       </div>
-      <button type="submit" class="submit-btn">Подтвердить заказ</button>
+      <button type="submit" class="submit-btn">Отправить запрос</button>
     </form>
+  </div>
+</div>
+
+<!-- Модалка "Мои заказы" (Личный кабинет) -->
+<div class="modal" id="ordersModal">
+  <div class="modal-box">
+    <h2>История заказов</h2>
+    <div class="order-history" id="orderHistoryList">
+      <!-- Сюда вставляются заказы -->
+    </div>
+    <button class="submit-btn" style="margin-top: 20px; background: #7f8c8d;" onclick="closeOrders()">Закрыть</button>
   </div>
 </div>
 
@@ -748,9 +751,15 @@
 <!-- Уведомление -->
 <div class="toast" id="toast"></div>
 
+<!-- Футер (ИЗМЕНЕН) -->
 <footer>
   <span class="cross">☦</span>
-  © 1998 Православный книжный магазин «От Архимандрита»
+  <div class="brand">1998 год — Книги от Архимандрита</div>
+  <div>Духовная литература, иконы, церковная утварь</div>
+  
+  <div class="disclaimer">
+    Сайт носит исключительно информационный характер и не является публичной офертой, определяемой положениями Статьи 437 (2) Гражданского кодекса РФ. Все указанные на сайте суммы являются рекомендуемым размером добровольного пожертвования.
+  </div>
 </footer>
 
 <script>
@@ -820,7 +829,6 @@ const books = [
   { id: 53, title: 'Шоколад от Архимандрита', author: '', price: 250, category: 'Товары от Архимандрита', emoji: '🍫', color: '#5c3a21', images: [] }
 ];
 
-/* Иконки для карточек категорий */
 const categoryIcons = {
   'Закон Божий':   '📖',
   'Молитвослов':   '🙏',
@@ -833,19 +841,20 @@ const categoryIcons = {
 };
 
 /* ============================================================
-   СОСТОЯНИЕ
+   СОСТОЯНИЕ И ХРАНИЛИЩА
    ============================================================ */
 let cart = JSON.parse(localStorage.getItem('bookCart') || '[]');
+let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
 let activeFilter = 'Все';
 
-/* ============================================================
-   УТИЛИТЫ И РЕНДЕР
-   ============================================================ */
 function declOfNum(n, titles) {
   const cases = [2, 0, 1, 1, 1, 2];
   return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
 }
 
+/* ============================================================
+   РЕНДЕР КАТАЛОГА
+   ============================================================ */
 function renderCategoryCards() {
   const cats = [...new Set(books.map(b => b.category))];
   document.getElementById('categoryGrid').innerHTML = cats.map(cat => {
@@ -882,9 +891,7 @@ function setFilter(cat) {
 }
 
 function renderCatalog() {
-  const list = activeFilter === 'Все'
-    ? books
-    : books.filter(b => b.category === activeFilter);
+  const list = activeFilter === 'Все' ? books : books.filter(b => b.category === activeFilter);
 
   const title = document.getElementById('catalogTitle');
   if (activeFilter === 'Все') {
@@ -908,9 +915,11 @@ function renderCatalog() {
       <div class="book-info">
         <div class="book-category">${b.category}</div>
         <div class="book-title">${b.title}</div>
-        ${b.author ? `<div class="book-author">${b.author}</div>` : ''}
         <div class="book-bottom">
-          <div class="book-price">${b.price.toLocaleString('ru-RU')} <small>₽</small></div>
+          <div class="book-price">
+            ${b.price.toLocaleString('ru-RU')} ₽ 
+            <small>размер пожертвования</small>
+          </div>
           <button class="add-btn" onclick="addToCart(${b.id}, this)">В корзину</button>
         </div>
       </div>
@@ -979,7 +988,7 @@ function updateCartUI() {
         </div>
         <div class="cart-item-info">
           <div class="cart-item-title">${item.title}</div>
-          <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+          <div class="cart-item-price">Пожертвование: ${item.price.toLocaleString('ru-RU')} ₽</div>
           <div class="qty-controls">
             <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
             <span class="qty-num">${item.qty}</span>
@@ -998,13 +1007,14 @@ function updateCartUI() {
 }
 
 /* ============================================================
-   ОТКРЫТИЕ / ЗАКРЫТИЕ
+   УПРАВЛЕНИЕ ПАНЕЛЯМИ
    ============================================================ */
 function openCart() {
+  closeAllPanels();
   document.getElementById('cartPanel').classList.add('open');
   document.getElementById('overlay').classList.add('open');
 }
-function closeCart() {
+function closeAllPanels() {
   document.getElementById('cartPanel').classList.remove('open');
   document.getElementById('overlay').classList.remove('open');
 }
@@ -1015,6 +1025,41 @@ function openCheckout() {
 }
 function closeCheckout() {
   document.getElementById('checkoutModal').classList.remove('open');
+}
+
+/* ============================================================
+   ЛИЧНЫЙ КАБИНЕТ (МОИ ЗАКАЗЫ)
+   ============================================================ */
+function openOrders() {
+  renderOrderHistory();
+  document.getElementById('ordersModal').classList.add('open');
+}
+function closeOrders() {
+  document.getElementById('ordersModal').classList.remove('open');
+}
+
+function renderOrderHistory() {
+  const list = document.getElementById('orderHistoryList');
+  if (orderHistory.length === 0) {
+    list.innerHTML = '<p style="text-align:center; color:var(--muted); padding: 20px 0;">У вас пока нет оформленных заказов.</p>';
+    return;
+  }
+  
+  // Выводим заказы в обратном порядке (сначала новые)
+  list.innerHTML = [...orderHistory].reverse().map(order => `
+    <div class="order-card">
+      <div class="order-card-header">
+        <span>Заказ от ${order.date}</span>
+        <span>${order.total} ₽</span>
+      </div>
+      <div class="order-card-items">
+        ${order.items.map(i => `• ${i.title} (${i.qty} шт.)`).join('<br>')}
+      </div>
+      <div class="order-card-total" style="font-size:12px; font-weight:normal; color:var(--muted);">
+        Получатель: ${order.name}
+      </div>
+    </div>
+  `).join('');
 }
 
 /* ============================================================
@@ -1050,7 +1095,7 @@ function closeGallery() {
 }
 
 /* ============================================================
-   ОФОРМЛЕНИЕ ЗАКАЗА (Интеграция с Formspree)
+   ОФОРМЛЕНИЕ ЗАКАЗА (Formspree + Сохранение в историю)
    ============================================================ */
 async function submitOrder(e) {
   e.preventDefault();
@@ -1072,13 +1117,12 @@ async function submitOrder(e) {
     email: data.email,
     address: data.address,
     order_details: itemsList,
-    total_price: total.toLocaleString('ru-RU') + ' ₽'
+    total_donation: total.toLocaleString('ru-RU') + ' ₽'
   };
 
   const submitBtn = form.querySelector('.submit-btn');
   const originalBtnText = submitBtn.textContent;
   
-  // Блокируем кнопку
   submitBtn.disabled = true;
   submitBtn.textContent = 'Отправка...';
 
@@ -1092,18 +1136,28 @@ async function submitOrder(e) {
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) {
-      throw new Error('Ошибка отправки');
-    }
+    if (!response.ok) throw new Error('Ошибка отправки');
+
+    // СОХРАНЯЕМ В ЛИЧНЫЙ КАБИНЕТ (Локально)
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+    
+    orderHistory.push({
+      date: dateStr,
+      items: [...cart], // копируем корзину
+      total: total.toLocaleString('ru-RU'),
+      name: data.name
+    });
+    localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
 
     // Успешная отправка
     document.getElementById('modalContent').innerHTML = `
       <div class="success-msg">
         <div class="check">✅</div>
-        <h2>Заказ оформлен!</h2>
+        <h2>Заказ отправлен!</h2>
         <p>Спасибо, ${data.name}!<br>
            Мы свяжемся с вами по телефону ${data.phone}<br>
-           для подтверждения доставки.</p>
+           для подтверждения доставки и размера пожертвования.</p>
         <button class="submit-btn" onclick="finishOrder()">Отлично</button>
       </div>
     `;
@@ -1126,6 +1180,9 @@ function finishOrder() {
   setTimeout(() => {
     document.getElementById('modalContent').innerHTML = `
       <h2>Оформление заказа</h2>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">
+        Оставьте свои данные, и мы свяжемся с вами для согласования размера добровольного пожертвования и доставки.
+      </p>
       <form id="checkoutForm" onsubmit="submitOrder(event)">
         <div class="form-group">
           <label>Ваше имя *</label>
@@ -1143,14 +1200,14 @@ function finishOrder() {
           <label>Адрес доставки *</label>
           <textarea name="address" rows="2" required placeholder="Город, улица, дом, квартира"></textarea>
         </div>
-        <button type="submit" class="submit-btn">Подтвердить заказ</button>
+        <button type="submit" class="submit-btn">Отправить запрос</button>
       </form>
     `;
   }, 300);
 }
 
 /* ============================================================
-   TOAST
+   TOAST И ИНИЦИАЛИЗАЦИЯ
    ============================================================ */
 let toastTimer;
 function showToast(msg) {
@@ -1161,21 +1218,15 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-/* ============================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
 renderCategoryCards();
 renderFilters();
 renderCatalog();
 updateCartUI();
 
 // Закрытие модалок по клику на фон
-document.getElementById('checkoutModal').addEventListener('click', e => {
-  if (e.target.id === 'checkoutModal') closeCheckout();
-});
-document.getElementById('galleryModal').addEventListener('click', e => {
-  if (e.target.id === 'galleryModal') closeGallery();
-});
+document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target.id === 'checkoutModal') closeCheckout(); });
+document.getElementById('ordersModal').addEventListener('click', e => { if (e.target.id === 'ordersModal') closeOrders(); });
+document.getElementById('galleryModal').addEventListener('click', e => { if (e.target.id === 'galleryModal') closeGallery(); });
 </script>
 </body>
 </html>
