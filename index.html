@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Православный книжный магазин «Лампада»</title>
+<title>Православный магазин «Лампада»</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -244,6 +244,23 @@
     font-size: 60px;
     color: #fff;
     position: relative;
+    cursor: pointer;
+  }
+  .book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .img-count {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-family: Arial, sans-serif;
   }
   .book-info {
     padding: 18px;
@@ -380,6 +397,12 @@
     font-size: 24px;
     color: #fff;
     flex-shrink: 0;
+    overflow: hidden;
+  }
+  .cart-item-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .cart-item-info { flex: 1; min-width: 0; }
   .cart-item-title {
@@ -453,7 +476,7 @@
     cursor: not-allowed;
   }
 
-  /* ---------- Модалка ---------- */
+  /* ---------- Модалки (Оформление и Галерея) ---------- */
   .modal {
     position: fixed;
     inset: 0;
@@ -516,6 +539,10 @@
     transition: background .2s;
   }
   .submit-btn:hover { background: #0f1626; }
+  .submit-btn:disabled {
+    background: #7f8c8d;
+    cursor: wait;
+  }
   .success-msg {
     text-align: center;
     padding: 20px 0;
@@ -526,6 +553,55 @@
   }
   .success-msg h2 { color: #27ae60; margin-bottom: 10px; }
   .success-msg p { color: var(--muted); margin-bottom: 20px; }
+
+  /* Галерея */
+  .gallery-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 620px;
+    width: 100%;
+    position: relative;
+    animation: popIn .3s ease;
+  }
+  .gallery-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: #fff;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  #galleryMain {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f5f3ef;
+    display: block;
+    margin-bottom: 14px;
+  }
+  .gallery-thumbs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .gallery-thumbs img {
+    width: 70px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color .2s;
+    flex-shrink: 0;
+  }
+  .gallery-thumbs img:hover { border-color: var(--accent); }
+  .gallery-thumbs img.active { border-color: var(--accent); }
 
   /* ---------- Toast ---------- */
   .toast {
@@ -634,7 +710,7 @@
   </div>
 </aside>
 
-<!-- Модалка оформления -->
+<!-- Модалка оформления заказа -->
 <div class="modal" id="checkoutModal">
   <div class="modal-box" id="modalContent">
     <h2>Оформление заказа</h2>
@@ -660,12 +736,21 @@
   </div>
 </div>
 
+<!-- Модалка галереи -->
+<div class="modal gallery-modal" id="galleryModal">
+  <div class="gallery-box">
+    <button class="close-btn gallery-close" onclick="closeGallery()">×</button>
+    <img id="galleryMain" src="" alt="">
+    <div class="gallery-thumbs" id="galleryThumbs"></div>
+  </div>
+</div>
+
 <!-- Уведомление -->
 <div class="toast" id="toast"></div>
 
 <footer>
   <span class="cross">☦</span>
-  © 2001 Православный книжный магазин «Лампада» — для продажи книг
+  © 2025 Православный магазин «Лампада» — демо-версия для продажи книг
 </footer>
 
 <script>
@@ -674,41 +759,41 @@
    ============================================================ */
 const books = [
   // ---------- ЗАКОН БОЖИЙ ----------
-  { id: 1,  title: "Закон Божий",                    author: "прот. Серафим Слободской", price: 300, category: "Закон Божий", emoji: "📖", color: "#8b5e3c" },
-  { id: 2,  title: "Новый завет в паралельном переводе",         author: "",  price: 300, category: "Закон Божий", emoji: "✝️", color: "#7c2d12" },
-  { id: 3,  title: "Основы православной веры",       author: "прот. Александр Мень",     price: 740, category: "Закон Божий", emoji: "🕊️", color: "#0f766e" },
-  { id: 4,  title: "Детям о Боге. Закон Божий",      author: "С. Куломзина",             price: 580, category: "Закон Божий", emoji: "👼", color: "#0369a1" },
-  { id: 5,  title: "Символ веры с пояснениями",      author: "свт. Николай Сербский",    price: 490, category: "Закон Божий", emoji: "📜", color: "#78350f" },
-  { id: 6,  title: "Таинства Православной Церкви",   author: "прот. Владислав Свешников", price: 680, category: "Закон Божий", emoji: "🕯️", color: "#6d28d9" },
+  { id: 1,  title: "Закон Божий",                    author: "прот. Серафим Слободской", price: 890, category: "Закон Божий", emoji: "📖", color: "#8b5e3c", images: [] },
+  { id: 2,  title: "Православный катехизис",         author: "свт. Филарет Московский",  price: 620, category: "Закон Божий", emoji: "✝️", color: "#7c2d12", images: [] },
+  { id: 3,  title: "Основы православной веры",       author: "прот. Александр Мень",     price: 740, category: "Закон Божий", emoji: "🕊️", color: "#0f766e", images: [] },
+  { id: 4,  title: "Детям о Боге. Закон Божий",      author: "С. Куломзина",             price: 580, category: "Закон Божий", emoji: "👼", color: "#0369a1", images: [] },
+  { id: 5,  title: "Символ веры с пояснениями",      author: "свт. Николай Сербский",    price: 490, category: "Закон Божий", emoji: "📜", color: "#78350f", images: [] },
+  { id: 6,  title: "Таинства Православной Церкви",   author: "прот. Владислав Свешников", price: 680, category: "Закон Божий", emoji: "🕯️", color: "#6d28d9", images: [] },
 
   // ---------- СИНОДИК ----------
-  { id: 7,  title: "Синодик (общая тетрадь)",        author: "Издание Сретенского монастыря", price: 320, category: "Синодик", emoji: "📔", color: "#475569" },
-  { id: 8,  title: "Синодик о здравии",              author: "Православное издание",           price: 280, category: "Синодик", emoji: "💛", color: "#a16207" },
-  { id: 9,  title: "Синодик об упокоении",           author: "Православное издание",           price: 280, category: "Синодик", emoji: "🤍", color: "#334155" },
-  { id: 10, title: "Вечный помянник",                author: "Издание Оптиной пустыни",        price: 550, category: "Синодик", emoji: "📕", color: "#7f1d1d" },
-  { id: 11, title: "Синодик монастырский",           author: "Издание Валаамского монастыря",  price: 690, category: "Синодик", emoji: "✒️", color: "#1c1917" },
+  { id: 7,  title: "Синодик (общая тетрадь)",        author: "Издание Сретенского монастыря", price: 320, category: "Синодик", emoji: "📔", color: "#475569", images: [] },
+  { id: 8,  title: "Синодик о здравии",              author: "Православное издание",           price: 280, category: "Синодик", emoji: "💛", color: "#a16207", images: [] },
+  { id: 9,  title: "Синодик об упокоении",           author: "Православное издание",           price: 280, category: "Синодик", emoji: "🤍", color: "#334155", images: [] },
+  { id: 10, title: "Вечный помянник",                author: "Издание Оптиной пустыни",        price: 550, category: "Синодик", emoji: "📕", color: "#7f1d1d", images: [] },
+  { id: 11, title: "Синодик монастырский",           author: "Издание Валаамского монастыря",  price: 690, category: "Синодик", emoji: "✒️", color: "#1c1917", images: [] },
 
   // ---------- ЖИТИЯ СВЯТЫХ ----------
-  { id: 12, title: "Жития Святых (полный год)",      author: "свт. Димитрий Ростовский", price: 1490, category: "Жития Святых", emoji: "📚", color: "#78350f" },
-  { id: 13, title: "Преподобный Серафим Саровский",  author: "Житие в пересказе",        price: 490, category: "Жития Святых", emoji: "🌿", color: "#15803d" },
-  { id: 14, title: "Святитель Николай Чудотворец",   author: "Житие и чудеса",           price: 520, category: "Жития Святых", emoji: "⚓", color: "#075985" },
-  { id: 15, title: "Преподобный Сергий Радонежский", author: "Житие в пересказе",        price: 480, category: "Жития Святых", emoji: "🕯️", color: "#7c2d12" },
-  { id: 16, title: "Святая блаженная Ксения Петербургская", author: "Житие и подвиги",   price: 450, category: "Жития Святых", emoji: "🌹", color: "#be185d" },
-  { id: 17, title: "Царственные страстотерпцы",      author: "Жития и письма",           price: 720, category: "Жития Святых", emoji: "👑", color: "#991b1b" },
+  { id: 12, title: "Жития Святых (полный год)",      author: "свт. Димитрий Ростовский", price: 1490, category: "Жития Святых", emoji: "📚", color: "#78350f", images: [] },
+  { id: 13, title: "Преподобный Серафим Саровский",  author: "Житие в пересказе",        price: 490, category: "Жития Святых", emoji: "🌿", color: "#15803d", images: [] },
+  { id: 14, title: "Святитель Николай Чудотворец",   author: "Житие и чудеса",           price: 520, category: "Жития Святых", emoji: "⚓", color: "#075985", images: [] },
+  { id: 15, title: "Преподобный Сергий Радонежский", author: "Житие в пересказе",        price: 480, category: "Жития Святых", emoji: "🕯️", color: "#7c2d12", images: [] },
+  { id: 16, title: "Святая блаженная Ксения Петербургская", author: "Житие и подвиги",   price: 450, category: "Жития Святых", emoji: "🌹", color: "#be185d", images: [] },
+  { id: 17, title: "Царственные страстотерпцы",      author: "Жития и письма",           price: 720, category: "Жития Святых", emoji: "👑", color: "#991b1b", images: [] },
 
   // ---------- АКАФИСТЫ ----------
-  { id: 18, title: "Акафист Иисусу Сладчайшему",     author: "Православное издание", price: 190, category: "Акафисты", emoji: "✝️", color: "#7c2d12" },
-  { id: 19, title: "Акафист Пресвятой Богородице",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "💙", color: "#0c4a6e" },
-  { id: 20, title: "Акафист святителю Николаю",      author: "Православное издание", price: 210, category: "Акафисты", emoji: "⭐", color: "#1e40af" },
-  { id: 21, title: "Акафист преподобному Серафиму Саровскому", author: "Православное издание", price: 210, category: "Акафисты", emoji: "🌿", color: "#15803d" },
-  { id: 22, title: "Акафист святому Пантелеимону",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "🌾", color: "#a16207" },
+  { id: 18, title: "Акафист Иисусу Сладчайшему",     author: "Православное издание", price: 190, category: "Акафисты", emoji: "✝️", color: "#7c2d12", images: [] },
+  { id: 19, title: "Акафист Пресвятой Богородице",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "💙", color: "#0c4a6e", images: [] },
+  { id: 20, title: "Акафист святителю Николаю",      author: "Православное издание", price: 210, category: "Акафисты", emoji: "⭐", color: "#1e40af", images: [] },
+  { id: 21, title: "Акафист преподобному Серафиму Саровскому", author: "Православное издание", price: 210, category: "Акафисты", emoji: "🌿", color: "#15803d", images: [] },
+  { id: 22, title: "Акафист святому Пантелеимону",   author: "Православное издание", price: 220, category: "Акафисты", emoji: "🌾", color: "#a16207", images: [] },
 
   // ---------- МОЛИТВОСЛОВЫ ----------
-  { id: 23, title: "Православный молитвослов",       author: "Издание Сретенского монастыря", price: 590, category: "Молитвословы", emoji: "📖", color: "#1c1917" },
-  { id: 24, title: "Молитвослов карманный",          author: "Православное издание",          price: 340, category: "Молитвословы", emoji: "📔", color: "#78350f" },
-  { id: 25, title: "Молитвослов крупным шрифтом",    author: "Православное издание",          price: 620, category: "Молитвословы", emoji: "🔍", color: "#334155" },
-  { id: 26, title: "Молитвослов для детей",          author: "Православное издание",          price: 480, category: "Молитвословы", emoji: "👶", color: "#0369a1" },
-  { id: 27, title: "Псалтирь",                       author: "Православное издание",          price: 690, category: "Молитвословы", emoji: "🎵", color: "#7c2d12" },
+  { id: 23, title: "Православный молитвослов",       author: "Издание Сретенского монастыря", price: 590, category: "Молитвословы", emoji: "📖", color: "#1c1917", images: [] },
+  { id: 24, title: "Молитвослов карманный",          author: "Православное издание",          price: 340, category: "Молитвословы", emoji: "📔", color: "#78350f", images: [] },
+  { id: 25, title: "Молитвослов крупным шрифтом",    author: "Православное издание",          price: 620, category: "Молитвословы", emoji: "🔍", color: "#334155", images: [] },
+  { id: 26, title: "Молитвослов для детей",          author: "Православное издание",          price: 480, category: "Молитвословы", emoji: "👶", color: "#0369a1", images: [] },
+  { id: 27, title: "Псалтирь",                       author: "Православное издание",          price: 690, category: "Молитвословы", emoji: "🎵", color: "#7c2d12", images: [] },
 ];
 
 /* Иконки для карточек категорий */
@@ -727,8 +812,13 @@ let cart = JSON.parse(localStorage.getItem('bookCart') || '[]');
 let activeFilter = 'Все';
 
 /* ============================================================
-   РЕНДЕР КАТЕГОРИЙ НА ГЛАВНОЙ
+   УТИЛИТЫ И РЕНДЕР
    ============================================================ */
+function declOfNum(n, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+  return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
+}
+
 function renderCategoryCards() {
   const cats = [...new Set(books.map(b => b.category))];
   document.getElementById('categoryGrid').innerHTML = cats.map(cat => {
@@ -744,20 +834,11 @@ function renderCategoryCards() {
   }).join('');
 }
 
-function declOfNum(n, titles) {
-  const cases = [2, 0, 1, 1, 1, 2];
-  return titles[(n % 100 > 4 && n % 100 < 20) ? 2 : cases[(n % 10 < 5) ? n % 10 : 5]];
-}
-
 function selectCategory(cat) {
   setFilter(cat);
-  // Прокрутка к каталогу
   document.getElementById('catalogTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* ============================================================
-   РЕНДЕР ФИЛЬТРОВ (кнопки под категориями)
-   ============================================================ */
 function renderFilters() {
   const cats = ['Все', ...new Set(books.map(b => b.category))];
   document.getElementById('filters').innerHTML = cats.map(c =>
@@ -773,15 +854,11 @@ function setFilter(cat) {
   renderCatalog();
 }
 
-/* ============================================================
-   РЕНДЕР КАТАЛОГА
-   ============================================================ */
 function renderCatalog() {
   const list = activeFilter === 'Все'
     ? books
     : books.filter(b => b.category === activeFilter);
 
-  // Заголовок над каталогом
   const title = document.getElementById('catalogTitle');
   if (activeFilter === 'Все') {
     title.textContent = `Все книги (${books.length})`;
@@ -789,10 +866,17 @@ function renderCatalog() {
     title.textContent = `${categoryIcons[activeFilter] || ''} ${activeFilter} — ${list.length} ${declOfNum(list.length, ['книга','книги','книг'])}`;
   }
 
-  document.getElementById('catalog').innerHTML = list.map(b => `
+  document.getElementById('catalog').innerHTML = list.map(b => {
+    const cover = b.images && b.images.length ? b.images[0] : null;
+    const hasGallery = b.images && b.images.length > 1;
+    
+    return `
     <article class="book-card">
-      <div class="book-cover" style="background: linear-gradient(135deg, ${b.color}, ${b.color}cc)">
-        ${b.emoji}
+      <div class="book-cover" 
+           style="background: linear-gradient(135deg, ${b.color}, ${b.color}cc)"
+           ${cover ? `onclick="openGallery(${b.id})"` : ''}>
+        ${cover ? `<img src="${cover}" alt="${b.title}">` : b.emoji}
+        ${hasGallery ? `<span class="img-count">📷 ${b.images.length}</span>` : ''}
       </div>
       <div class="book-info">
         <div class="book-category">${b.category}</div>
@@ -804,7 +888,8 @@ function renderCatalog() {
         </div>
       </div>
     </article>
-  `).join('');
+  `;
+  }).join('');
 }
 
 /* ============================================================
@@ -858,10 +943,12 @@ function updateCartUI() {
   if (cart.length === 0) {
     itemsEl.innerHTML = '<div class="cart-empty">Корзина пуста 🛒<br>Добавьте книги из каталога</div>';
   } else {
-    itemsEl.innerHTML = cart.map(item => `
+    itemsEl.innerHTML = cart.map(item => {
+      const cover = item.images && item.images.length ? item.images[0] : null;
+      return `
       <div class="cart-item">
         <div class="cart-item-cover" style="background: linear-gradient(135deg, ${item.color}, ${item.color}cc)">
-          ${item.emoji}
+          ${cover ? `<img src="${cover}" alt="${item.title}">` : item.emoji}
         </div>
         <div class="cart-item-info">
           <div class="cart-item-title">${item.title}</div>
@@ -874,7 +961,8 @@ function updateCartUI() {
         </div>
         <button class="remove-btn" onclick="removeItem(${item.id})" title="Удалить">✕</button>
       </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -903,32 +991,107 @@ function closeCheckout() {
 }
 
 /* ============================================================
-   ОФОРМЛЕНИЕ ЗАКАЗА
+   ГАЛЕРЕЯ
    ============================================================ */
-function submitOrder(e) {
+let currentGalleryImages = [];
+
+function openGallery(id) {
+  const book = books.find(b => b.id === id);
+  if (!book || !book.images || book.images.length === 0) return;
+
+  currentGalleryImages = book.images;
+  document.getElementById('galleryMain').src = book.images[0];
+  document.getElementById('galleryMain').alt = book.title;
+
+  document.getElementById('galleryThumbs').innerHTML = book.images.map((img, i) => `
+    <img src="${img}" alt="${book.title} ${i+1}" 
+         class="${i === 0 ? 'active' : ''}" 
+         onclick="setGalleryImage('${img}', this)">
+  `).join('');
+
+  document.getElementById('galleryModal').classList.add('open');
+}
+
+function setGalleryImage(src, thumb) {
+  document.getElementById('galleryMain').src = src;
+  document.querySelectorAll('.gallery-thumbs img').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
+function closeGallery() {
+  document.getElementById('galleryModal').classList.remove('open');
+}
+
+/* ============================================================
+   ОФОРМЛЕНИЕ ЗАКАЗА (Интеграция с Formspree)
+   ============================================================ */
+async function submitOrder(e) {
   e.preventDefault();
-  const data = Object.fromEntries(new FormData(e.target));
+  
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xdeeeeea';
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form));
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-  // Отправка заказа на сервер (пример):
-  // fetch('/api/order', { method: 'POST', body: JSON.stringify({ ...data, cart, total }) })
+  // Собираем список книг для письма
+  const itemsList = cart.map(i => 
+    `• ${i.title} (${i.author}) — ${i.qty} шт. = ${(i.price * i.qty).toLocaleString('ru-RU')} ₽`
+  ).join('\n');
 
-  console.log('Заказ:', { ...data, cart, total });
+  // Данные для отправки
+  const payload = {
+    name: data.name,
+    phone: data.phone,
+    email: data.email,
+    address: data.address,
+    order_details: itemsList,
+    total_price: total.toLocaleString('ru-RU') + ' ₽'
+  };
 
-  document.getElementById('modalContent').innerHTML = `
-    <div class="success-msg">
-      <div class="check">✅</div>
-      <h2>Заказ оформлен!</h2>
-      <p>Спасибо, ${data.name}!<br>
-         Мы свяжемся с вами по телефону ${data.phone}<br>
-         для подтверждения доставки.</p>
-      <button class="submit-btn" onclick="finishOrder()">Отлично</button>
-    </div>
-  `;
+  const submitBtn = form.querySelector('.submit-btn');
+  const originalBtnText = submitBtn.textContent;
+  
+  // Блокируем кнопку
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Отправка...';
 
-  cart = [];
-  saveCart();
-  updateCartUI();
+  try {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка отправки');
+    }
+
+    // Успешная отправка
+    document.getElementById('modalContent').innerHTML = `
+      <div class="success-msg">
+        <div class="check">✅</div>
+        <h2>Заказ оформлен!</h2>
+        <p>Спасибо, ${data.name}!<br>
+           Мы свяжемся с вами по телефону ${data.phone}<br>
+           для подтверждения доставки.</p>
+        <button class="submit-btn" onclick="finishOrder()">Отлично</button>
+      </div>
+    `;
+
+    // Очищаем корзину
+    cart = [];
+    saveCart();
+    updateCartUI();
+
+  } catch (error) {
+    console.error(error);
+    alert('Не удалось отправить заказ. Пожалуйста, проверьте интернет или позвоните нам.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  }
 }
 
 function finishOrder() {
@@ -979,8 +1142,12 @@ renderFilters();
 renderCatalog();
 updateCartUI();
 
+// Закрытие модалок по клику на фон
 document.getElementById('checkoutModal').addEventListener('click', e => {
   if (e.target.id === 'checkoutModal') closeCheckout();
+});
+document.getElementById('galleryModal').addEventListener('click', e => {
+  if (e.target.id === 'galleryModal') closeGallery();
 });
 </script>
 </body>
