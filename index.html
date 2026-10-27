@@ -640,7 +640,6 @@
     Стол заказов типографии<br>Екатеринбургской Епархии
   </div>
   <div class="header-actions">
-    <!-- Кнопка "Мои заказы" удалена -->
     <button class="header-btn cart-btn" onclick="openCart()">
       🛒 Корзина <span class="cart-count" id="cartCount">0</span>
     </button>
@@ -718,10 +717,9 @@
         <input type="date" name="pickup_date" required style="margin-bottom: 12px; cursor: pointer;">
         
         <div style="font-size: 13px; color: var(--text); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 10px;">
-          <b>Контакты типографии:</b><br>
-          <!-- ЗАМЕНИТЕ НА РЕАЛЬНЫЕ ДАННЫЕ ТИПОГРАФИИ! -->
-          📞 <a href="tel:+73430000000" style="color: var(--accent); font-weight: bold;">+7 (343) 000-00-00</a><br>
-          ✉️ <a href="mailto:tipografia@eparhia.ru" style="color: var(--accent); font-weight: bold;">tipografia@eparhia.ru</a>
+          <b>Контакты типографии (Алена):</b><br>
+          📞 <a href="tel:+79960320581" style="color: var(--accent); font-weight: bold;">+7 996 032-05-81</a><br>
+          ✉️ <a href="mailto:alena@orthodox-polygraphy.ru" style="color: var(--accent); font-weight: bold;">alena@orthodox-polygraphy.ru</a>
         </div>
       </div>
 
@@ -1047,7 +1045,7 @@ function closeGallery() {
 }
 
 /* ============================================================
-   ОФОРМЛЕНИЕ ЗАКАЗА (Formspree)
+   ОФОРМЛЕНИЕ ЗАКАЗА (Formspree + Автоответ)
    ============================================================ */
 async function submitOrder(e) {
   e.preventDefault();
@@ -1061,14 +1059,35 @@ async function submitOrder(e) {
     `• ${i.title} — ${i.qty} шт. = ${(i.price * i.qty).toLocaleString('ru-RU')} ₽`
   ).join('\n');
 
-  // Данные для отправки
+  // Текст письма, который автоматически получит покупатель
+  const autoResponseMessage = `Здравствуйте, ${data.name}!
+
+Благодарим вас за оформление заявки в Стол заказов типографии Екатеринбургской Епархии.
+
+Ваш заказ:
+${itemsList}
+
+Итого пожертвование: ${total.toLocaleString('ru-RU')} ₽
+Дата забора: ${data.pickup_date} (ул. Репина, 6А)
+
+Если у вас возникли вопросы, вы можете связаться с нами:
+Алена
+Телефон: +7 996 032-05-81
+Email: alena@orthodox-polygraphy.ru
+
+Спасибо за ваш заказ!`;
+
+  // Данные для отправки в Formspree
   const payload = {
     name: data.name,
     phone: data.phone,
     email: data.email,
-    pickup_date: data.pickup_date, // Передаем выбранную дату
+    pickup_date: data.pickup_date,
     order_details: itemsList,
-    total_donation: total.toLocaleString('ru-RU') + ' ₽'
+    total_donation: total.toLocaleString('ru-RU') + ' ₽',
+    
+    // Специальное поле Formspree для автоматического ответа покупателю
+    _autoresponse: autoResponseMessage 
   };
 
   const submitBtn = form.querySelector('.submit-btn');
@@ -1094,6 +1113,7 @@ async function submitOrder(e) {
         <div class="check">✅</div>
         <h2>Заказ отправлен!</h2>
         <p>Спасибо, ${data.name}!<br>
+           Копия заказа отправлена на вашу почту ${data.email}.<br>
            Мы свяжемся с вами по телефону ${data.phone}.<br>
            Ожидаем вас с ${data.pickup_date} по адресу ул. Репина, 6А.</p>
         <button class="submit-btn" onclick="finishOrder()">Отлично</button>
@@ -1140,9 +1160,9 @@ function finishOrder() {
           <input type="date" name="pickup_date" required style="margin-bottom: 12px; cursor: pointer;">
           
           <div style="font-size: 13px; color: var(--text); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 10px;">
-            <b>Контакты типографии:</b><br>
-            📞 <a href="tel:+73430000000" style="color: var(--accent); font-weight: bold;">+7 (343) 000-00-00</a><br>
-            ✉️ <a href="mailto:tipografia@eparhia.ru" style="color: var(--accent); font-weight: bold;">tipografia@eparhia.ru</a>
+            <b>Контакты типографии (Алена):</b><br>
+            📞 <a href="tel:+79960320581" style="color: var(--accent); font-weight: bold;">+7 996 032-05-81</a><br>
+            ✉️ <a href="mailto:alena@orthodox-polygraphy.ru" style="color: var(--accent); font-weight: bold;">alena@orthodox-polygraphy.ru</a>
           </div>
         </div>
 
