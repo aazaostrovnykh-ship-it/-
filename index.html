@@ -1,9 +1,24 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Стол заказов типографии</title>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113824072', 'ym');
+
+    ym(113824072, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/113824072" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -536,26 +551,6 @@
   .submit-btn:hover { background: #0f1626; }
   .submit-btn:disabled { background: #7f8c8d; cursor: wait; }
 
-  /* Личный кабинет (История) */
-  .order-history { display: flex; flex-direction: column; gap: 15px; }
-  .order-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 15px;
-    background: #faf8f2;
-  }
-  .order-card-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--primary);
-    border-bottom: 1px dashed var(--border);
-    padding-bottom: 8px;
-  }
-  .order-card-items { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-  .order-card-total { font-weight: bold; text-align: right; }
-
   .success-msg { text-align: center; padding: 20px 0; }
   .success-msg .check { font-size: 60px; margin-bottom: 16px; }
   .success-msg h2 { color: #27ae60; margin-bottom: 10px; }
@@ -645,9 +640,7 @@
     Стол заказов типографии<br>Екатеринбургской Епархии
   </div>
   <div class="header-actions">
-    <button class="header-btn" onclick="openOrders()">
-      📋 Мои заказы
-    </button>
+    <!-- Кнопка "Мои заказы" удалена -->
     <button class="header-btn cart-btn" onclick="openCart()">
       🛒 Корзина <span class="cart-count" id="cartCount">0</span>
     </button>
@@ -734,17 +727,6 @@
 
       <button type="submit" class="submit-btn">Отправить запрос</button>
     </form>
-  </div>
-</div>
-
-<!-- Модалка "Мои заказы" (Личный кабинет) -->
-<div class="modal" id="ordersModal">
-  <div class="modal-box">
-    <h2>История заказов</h2>
-    <div class="order-history" id="orderHistoryList">
-      <!-- Сюда вставляются заказы -->
-    </div>
-    <button class="submit-btn" style="margin-top: 20px; background: #7f8c8d;" onclick="closeOrders()">Закрыть</button>
   </div>
 </div>
 
@@ -847,10 +829,9 @@ const categoryIcons = {
 };
 
 /* ============================================================
-   СОСТОЯНИЕ И ХРАНИЛИЩА
+   СОСТОЯНИЕ
    ============================================================ */
 let cart = JSON.parse(localStorage.getItem('bookCart') || '[]');
-let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
 let activeFilter = 'Все';
 
 function declOfNum(n, titles) {
@@ -1034,41 +1015,6 @@ function closeCheckout() {
 }
 
 /* ============================================================
-   ЛИЧНЫЙ КАБИНЕТ (МОИ ЗАКАЗЫ)
-   ============================================================ */
-function openOrders() {
-  renderOrderHistory();
-  document.getElementById('ordersModal').classList.add('open');
-}
-function closeOrders() {
-  document.getElementById('ordersModal').classList.remove('open');
-}
-
-function renderOrderHistory() {
-  const list = document.getElementById('orderHistoryList');
-  if (orderHistory.length === 0) {
-    list.innerHTML = '<p style="text-align:center; color:var(--muted); padding: 20px 0;">У вас пока нет оформленных заказов.</p>';
-    return;
-  }
-  
-  list.innerHTML = [...orderHistory].reverse().map(order => `
-    <div class="order-card">
-      <div class="order-card-header">
-        <span>Заказ от ${order.date}</span>
-        <span>${order.total} ₽</span>
-      </div>
-      <div class="order-card-items">
-        ${order.items.map(i => `• ${i.title} (${i.qty} шт.)`).join('<br>')}
-      </div>
-      <div class="order-card-total" style="font-size:12px; font-weight:normal; color:var(--muted); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 8px;">
-        Получатель: ${order.name}<br>
-        Дата забора: <b>${order.pickup_date || 'Не указана'}</b>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* ============================================================
    ГАЛЕРЕЯ
    ============================================================ */
 let currentGalleryImages = [];
@@ -1101,7 +1047,7 @@ function closeGallery() {
 }
 
 /* ============================================================
-   ОФОРМЛЕНИЕ ЗАКАЗА (Formspree + История)
+   ОФОРМЛЕНИЕ ЗАКАЗА (Formspree)
    ============================================================ */
 async function submitOrder(e) {
   e.preventDefault();
@@ -1142,19 +1088,6 @@ async function submitOrder(e) {
     });
 
     if (!response.ok) throw new Error('Ошибка отправки');
-
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
-    
-    // Сохраняем в историю
-    orderHistory.push({
-      date: dateStr,
-      items: [...cart],
-      total: total.toLocaleString('ru-RU'),
-      name: data.name,
-      pickup_date: data.pickup_date // Сохраняем дату забора
-    });
-    localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
 
     document.getElementById('modalContent').innerHTML = `
       <div class="success-msg">
@@ -1237,7 +1170,6 @@ renderCatalog();
 updateCartUI();
 
 document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target.id === 'checkoutModal') closeCheckout(); });
-document.getElementById('ordersModal').addEventListener('click', e => { if (e.target.id === 'ordersModal') closeOrders(); });
 document.getElementById('galleryModal').addEventListener('click', e => { if (e.target.id === 'galleryModal') closeGallery(); });
 </script>
 </body>
